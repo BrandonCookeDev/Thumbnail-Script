@@ -10,11 +10,13 @@ var name2;
 
 var p1TagLayer = "Smashtag1";
 var p2TagLayer = "Smashtag2";
+var roundLayer = "Round";
 
+var textDir = 'Logos and Text';
 var leftCharactersDir = 'Characters_Left';
 var rightCharactersDir = 'Characters_Right';
 
-function savePNG(tournament, round, player1, player2, char1, char2){
+function savePNG(tournament, round, player1, player2){
     var pngOptions = new PNGSaveOptions();
 
     var fileName = tournament +' -' + round + '-' + player1 + player2 + ".png";
@@ -57,8 +59,8 @@ function switchChar2(char2, color2){
     }
 }
 
-function changePlayerName(layerName, newText){
-    var layerSetRef = doc.layerSets.getByName("Text");
+function changeText(layerName, newText){
+    var layerSetRef = doc.layerSets.getByName(textDir);
     var text = layerSetRef.layers.getByName(layerName);
     if(text.kind == LayerKind.TEXT) text.textItem.contents = newText;
     text.visible = true;
@@ -96,11 +98,12 @@ for(var s = 1; s<csvString.length; s++){
     switchChar2(char2,color2);
 
 //Change player names
-    changePlayerName(p1TagLayer, player1);
-    changePlayerName(p2TagLayer, player2);
+    changeText(p1TagLayer, player1);
+    changeText(p2TagLayer, player2);
+    changeText(roundLayer, round);
 
 //Save photo
-    savePNG(tournament, round, player1, player2, char1, char2);
+    savePNG(tournament, round, player1, player2);
 
 //Reset the layers
     charlay1.visible = false;
