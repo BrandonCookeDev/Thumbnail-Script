@@ -165,6 +165,8 @@ for(var s = 1; s<csvString.length; s++){
 //Reset the layers
     charlay1.visible = false;
     charlay2.visible = false;
+    charlay3.visible = false;
+    charlay4.visible = false;
 }
 
 
