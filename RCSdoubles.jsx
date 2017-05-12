@@ -4,29 +4,36 @@ var doc = app.activeDocument;
 var layer = doc.activeLayer;
 var charlay1 = doc.activeLayer;
 var charlay2 = doc.activeLayer;
-var charlay3 = doc.activeLayer;
-var charlay4 = doc.activeLayer;
 var group = layer.parent.layers;
 
 var name1;
 var name2;
+var name3;
+var name4;
 
+var roundLayer = "Round";
 var p1TagLayer = "Smashtag1";
 var p2TagLayer = "Smashtag2";
 var p3TagLayer = "Smashtag3";
 var p4TagLayer = "Smashtag4";
-var leftCharactersDir = 'Characters_Left';
-var rightCharactersDir = 'Characters_Right';
 
-function savePNG(tournament, round, player1, player2, char1, char2){
+var textDir             = 'Logos and Text';
+var leftCharactersDir   = 'Characters_Left';
+var leftCharactersP2Dir = 'Characters_Left_P2';
+var rightCharactersDir  = 'Characters_Right';
+var rightCharactersP2Dir  = 'Characters_Right_P2';
+
+function savePNG(tournament, round, player1, player2, player3, player4){
     var pngOptions = new PNGSaveOptions();
 
-    var fileName = tournament +' -' + round + '-' + player1 + player2 + ".png";
+    var fileName = tournament + 'Doubles-' + round + '-' + player1 + player2 + "-" + player3 + player4 + ".png";
     var path = File(fileName);
 
     doc.saveAs(path, pngOptions, true, Extension.LOWERCASE);
-    name1= p1TagLayer;
+    name1 = p1TagLayer;
     name2 = p2TagLayer;
+    name3 = p3TagLayer;
+    name4 = p4TagLayer;
 }
 
 function switchChar1(char1, color1){
@@ -47,7 +54,7 @@ function switchChar1(char1, color1){
 
 function switchChar2(char2, color2){
     //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(rightCharactersDir);
+    var charFolder = doc.layerSets.getByName(leftCharactersP2Dir);
     var layerSetRef = charFolder.layerSets.getByName(char2);
     group = layerSetRef.layers;
     for(var i = 0; i < group.length; i++)
@@ -63,7 +70,7 @@ function switchChar2(char2, color2){
 
 function switchChar3(char3, color3){
     //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(leftCharactersDir);
+    var charFolder = doc.layerSets.getByName(rightCharactersDir);
     var layerSetRef = charFolder.layerSets.getByName(char3);
     group = layerSetRef.layers;
     for(var i = 0; i < group.length; i++)
@@ -71,15 +78,15 @@ function switchChar3(char3, color3){
         if(group[i].name == color3)
         {
             doc.activeLayer = group[i];
-            charlay1 = doc.activeLayer;
-            charlay1.visible = true;
+            charlay3 = doc.activeLayer;
+            charlay3.visible = true;
         }
     }
 }
 
 function switchChar4(char4, color4){
     //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(rightCharactersDir);
+    var charFolder = doc.layerSets.getByName(rightCharactersP2Dir);
     var layerSetRef = charFolder.layerSets.getByName(char4);
     group = layerSetRef.layers;
     for(var i = 0; i < group.length; i++)
@@ -87,21 +94,25 @@ function switchChar4(char4, color4){
         if(group[i].name == color4)
         {
             doc.activeLayer = group[i];
-            charlay2 = doc.activeLayer;
-            charlay2.visible = true;
+            charlay4 = doc.activeLayer;
+            charlay4.visible = true;
         }
     }
 }
 
-function changePlayerName(layerName, newText){
-    var layerSetRef = doc.layerSets.getByName("Text");
+function changeText(layerName, newText){
+    var layerSetRef = doc.layerSets.getByName(textDir);
     var text = layerSetRef.layers.getByName(layerName);
     if(text.kind == LayerKind.TEXT) text.textItem.contents = newText;
     text.visible = true;
     if(layerName == p1TagLayer)
         name1 = text;
-    else
+    else if(layerName == p2TagLayer)
         name2 = text;
+    else if(layerName == p3TagLayer)
+        name3 = text;
+    else
+        name4 = text;
 }
 
 //CSV
@@ -135,7 +146,6 @@ for(var s = 1; s<csvString.length; s++){
     var char4 = lineData[12];
     var color4 = lineData[13];
 
-
 //Switch Characters
     switchChar1(char1,color1);
     switchChar2(char2,color2);
@@ -143,10 +153,11 @@ for(var s = 1; s<csvString.length; s++){
     switchChar4(char4,color4);
 
 //Change player names
-    changePlayerName(p1TagLayer, player1);
-    changePlayerName(p2TagLayer, player2);
-    changePlayerName(p3TagLayer, player3);
-    changePlayerName(p4TagLayer, player4);
+    changeText(p1TagLayer, player1);
+    changeText(p2TagLayer, player2);
+    changeText(p3TagLayer, player3);
+    changeText(p4TagLayer,player4);
+    changeText(roundLayer, round);
 
 //Save photo
     savePNG(tournament, round, player1, player2, player3, player4);
@@ -154,7 +165,6 @@ for(var s = 1; s<csvString.length; s++){
 //Reset the layers
     charlay1.visible = false;
     charlay2.visible = false;
-
 }
 
 
