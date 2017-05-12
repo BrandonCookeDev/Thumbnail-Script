@@ -10,6 +10,7 @@ var name2;
 
 var p1TagLayer = "Smashtag1";
 var p2TagLayer = "Smashtag2";
+
 var leftCharactersDir = 'Characters_Left';
 var rightCharactersDir = 'Characters_Right';
 
