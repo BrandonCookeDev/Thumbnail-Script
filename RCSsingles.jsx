@@ -19,7 +19,7 @@ var rightCharactersDir = 'Characters_Right';
 function savePNG(tournament, round, player1, player2){
     var pngOptions = new PNGSaveOptions();
 
-    var fileName = tournament +' -' + round + '-' + player1 + player2 + ".png";
+    var fileName = tournament + ' -' + round + '-' + player1 + "-" + player2 + ".png";
     var path = File(fileName);
 
     doc.saveAs(path, pngOptions, true, Extension.LOWERCASE);
