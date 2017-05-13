@@ -16,6 +16,8 @@ var textDir = 'Logos and Text';
 var leftCharactersDir = 'Characters_Left';
 var rightCharactersDir = 'Characters_Right';
 
+var errors = [];
+
 function savePNG(tournament, round, player1, player2){
     var pngOptions = new PNGSaveOptions();
 
@@ -79,36 +81,45 @@ csvString = csvString.split('\n');
 
 //Parses entire CSV
 for(var s = 1; s<csvString.length; s++){
-    var lineData = csvString[s].split(",");
+    try{
+        var lineData = csvString[s].split(",");
 
-//Process each line of data.
-    var tournament = lineData[0];
-    var round = lineData[1];
+        //Process each line of data.
+        var tournament = lineData[0];
+        var round = lineData[1];
 
-    var player1 = lineData[2];
-    var char1 = lineData[3];
-    var color1 = lineData[4];
+        var player1 = lineData[2];
+        var char1 = lineData[3];
+        var color1 = lineData[4];
 
-    var player2 = lineData[5];
-    var char2 = lineData[6];
-    var color2 = lineData[7];
+        var player2 = lineData[5];
+        var char2 = lineData[6];
+        var color2 = lineData[7];
 
-//Switch Characters
-    switchChar1(char1,color1);
-    switchChar2(char2,color2);
+        //Switch Characters
+        switchChar1(char1, color1);
+        switchChar2(char2, color2);
 
-//Change player names
-    changeText(p1TagLayer, player1);
-    changeText(p2TagLayer, player2);
-    changeText(roundLayer, round);
+        //Change player names
+        changeText(p1TagLayer, player1);
+        changeText(p2TagLayer, player2);
+        changeText(roundLayer, round);
 
-//Save photo
-    savePNG(tournament, round, player1, player2);
+        //Save photo
+        savePNG(tournament, round, player1, player2);
 
-//Reset the layers
-    charlay1.visible = false;
-    charlay2.visible = false;
+        //Reset the layers
+        charlay1.visible = false;
+        charlay2.visible = false;
+    }
+    catch(err){
+        errors.push(err);
+    }
 }
 
+var ret = 'Completed \n';
+for(var i=0; i < errors.length; i++){
+    errors += errors[i].message + ' \n';
+}
 
-alert("Completed");
+alert(ret);
