@@ -19,12 +19,12 @@ var rightCharactersDir = 'Characters_Right';
 var errors = [];
 
 function savePNG(tournament, round, player1, player2){
-    var pngOptions = new PNGSaveOptions();
+    var jpgOptions = new JPEGSaveOptions();
 
-    var fileName = tournament + ' -' + round + '-' + player1 + "-" + player2 + ".png";
+    var fileName = tournament + ' -' + round + '-' + player1 + "-" + player2 + ".jpg";
     var path = File(fileName);
 
-    doc.saveAs(path, pngOptions, true, Extension.LOWERCASE);
+    doc.saveAs(path, jpgOptions, true, Extension.LOWERCASE);
     name1= p1TagLayer;
     name2 = p2TagLayer;
 }
