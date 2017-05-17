@@ -1,5 +1,8 @@
 #target photoshop
 
+import "lib/underscore.js";
+import "MeleeCharacters.jsx";
+
 var doc = app.activeDocument;
 var layer = doc.activeLayer;
 var charlay1 = doc.activeLayer;
@@ -72,6 +75,16 @@ function changeText(layerName, newText){
         name2 = text;
 }
 
+function validateColor(char, color){
+    var filtered;
+    filtered = _.findWhere(characterData, {"Name": char});
+    if(filtered.Colors.indexOf(color) < 0) {
+        var msg = color + ' is not a color for ' + char;
+        alert(msg);
+        throw new Error(msg);
+    }
+}
+
 //CSV
 var csvFile = File.openDialog("Open Comma-delimited File","comma-delimited(*.csv):*.csv;");
 csvFile.open('r') ;
@@ -95,6 +108,10 @@ for(var s = 1; s<csvString.length; s++){
         var player2 = lineData[5];
         var char2 = lineData[6];
         var color2 = lineData[7];
+
+        //VALIDATE COLORS AND FAIL IF INCORRECT
+        validateColor(char1, color1);
+        validateColor(char2, color2);
 
         //Switch Characters
         switchChar1(char1, color1);
