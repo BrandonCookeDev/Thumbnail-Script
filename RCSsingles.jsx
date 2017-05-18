@@ -1,7 +1,6 @@
 #target photoshop
 
-import "lib/underscore.js";
-import "MeleeCharacters.jsx";
+var characterData = importCharacterData();
 
 var doc = app.activeDocument;
 var layer = doc.activeLayer;
@@ -75,14 +74,43 @@ function changeText(layerName, newText){
         name2 = text;
 }
 
-function validateColor(char, color){
-    var filtered;
-    filtered = _.findWhere(characterData, {"Name": char});
+function validateColor(characterName, color){
+    
+	var names = [];
+	for(var i = 0; i<characterData.length; i++){
+		var curCharacter = characterData[i];
+		
+		names.push(curCharacter.Name);
+		
+		if(characterName == curCharacter.Name){
+			var flag = false;
+			for(var c = 0; c < curCharacter.Colors.length; c++){
+				var curColor = curCharacter.Colors[c];
+				if(color == curColor)
+					flag = true;
+			}
+			if(!flag) throw new Error("\n"+color+" is not a valid color for "+characterName+".\nValid Colors are: \n"+curCharacter.Colors+"\n");
+		}
+	}
+	
+	var nameFlag = false;
+	for(var n = 0; n < names.length; n++){
+		var curName = names[n];
+		
+		if(curName == characterName)
+			nameFlag = true;
+	}
+	if(!nameFlag) throw new Error(characterName + ' is not a valid character. \nValid characters are: \n'+names+"\n");
+	
+	/*
+	var filtered;
+    filtered = _.findWhere(characterData, {"Name": character});
     if(filtered.Colors.indexOf(color) < 0) {
-        var msg = color + ' is not a color for ' + char;
+        var msg = color + ' is not a color for ' + character;
         alert(msg);
         throw new Error(msg);
     }
+	*/
 }
 
 //CSV
@@ -91,6 +119,22 @@ csvFile.open('r') ;
 var csvString = csvFile.read();
 csvFile.close();
 csvString = csvString.split('\n');
+
+//VALIDATE COLORS FOR CHARACTERS
+for(var s = 1; s<csvString.length; s++){
+	var lineData = csvString[s].split(",");
+
+	var char1 = lineData[3];
+	var color1 = lineData[4];
+
+	var char2 = lineData[6];
+	var color2 = lineData[7];
+
+	//VALIDATE COLORS AND FAIL IF INCORRECT
+	validateColor(char1, color1);
+	validateColor(char2, color2);
+}
+	
 
 //Parses entire CSV
 for(var s = 1; s<csvString.length; s++){
@@ -108,10 +152,6 @@ for(var s = 1; s<csvString.length; s++){
         var player2 = lineData[5];
         var char2 = lineData[6];
         var color2 = lineData[7];
-
-        //VALIDATE COLORS AND FAIL IF INCORRECT
-        validateColor(char1, color1);
-        validateColor(char2, color2);
 
         //Switch Characters
         switchChar1(char1, color1);
@@ -140,3 +180,8 @@ for(var i=0; i < errors.length; i++){
 }
 
 alert(ret);
+
+
+function importCharacterData(){
+	return [{Name:"Bowser",Colors:["Neutral","Black","Blue","Red"]},{Name:"Donkey Kong",Colors:["Neutral","Black","Blue","Green","Red"]},{Name:"Dr. Mario",Colors:["Neutral","Black","Green","Blue","Red"]},{Name:"Falco",Colors:["Neutral","Red","Green","Blue"]},{Name:"Captain Falcon",Colors:["Neutral","Red","Blue","Green","Pink","Black"]},{Name:"Fox",Colors:["Neutral","Green","Blue","Red"]},{Name:"Mr. Game and Watch",Colors:["Neutral","Blue","Green","Red"]},{Name:"Ganondorf",Colors:["Neutral","Blue","Purple","Green","Blue","Red"]},{Name:"Ice Climbers",Colors:["Neutral","Orange","Red","Green"]},{Name:"Kirby",Colors:["Neutral","White","Blue","Green","Red","Yellow"]},{Name:"Link",Colors:["Neutral","White","Black","Red","Blue"]},{Name:"Luigi",Colors:["Neutral","Blue","White","Pink"]},{Name:"Mario",Colors:["Neutral","Yellow","Black","Green","Blue"]},{Name:"Marth",Colors:["Neutral","White","Black","Green","Red"]},{Name:"MewTwo",Colors:["Neutral","Green","Blue","Yellow"]},{Name:"Ness",Colors:["Neutral","Green","Blue","Yellow"]},{Name:"Peach",Colors:["Neutral","Yellow","White","Green","Blue"]},{Name:"Pichu",Colors:["Neutral","Blue","Red","Green"]},{Name:"Pikachu",Colors:["Neutral","Green","Blue","Red"]},{Name:"Jigglypuff",Colors:["Neutral","Red","Yellow","Green","Blue"]},{Name:"Roy",Colors:["Neutral","Yellow","Red","Green","Blue"]},{Name:"Samus",Colors:["Neutral","Green","Purple","Black","Pink"]},{Name:"Sheik",Colors:["Neutral","Blue","Red","Green","White"]},{Name:"Yoshi",Colors:["Neutral","Pink","Blue","LightBlue","Yellow","Red"]},{Name:"Young Link",Colors:["Neutral","Black","White","Blue","Red"]},{Name:"Zelda",Colors:["Neutral","White","Green","Blue","Red"]}];
+}
