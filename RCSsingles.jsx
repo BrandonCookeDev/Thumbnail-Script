@@ -74,7 +74,7 @@ function changeText(layerName, newText){
         name2 = text;
 }
 
-function validateColor(characterName, color){
+function validate(characterName, color){
     
 	var names = [];
 	for(var i = 0; i<characterData.length; i++){
@@ -131,8 +131,8 @@ for(var s = 1; s<csvString.length; s++){
 	var color2 = lineData[7];
 
 	//VALIDATE COLORS AND FAIL IF INCORRECT
-	validateColor(char1, color1);
-	validateColor(char2, color2);
+	validate(char1, color1);
+	validate(char2, color2);
 }
 	
 
