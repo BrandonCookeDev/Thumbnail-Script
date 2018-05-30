@@ -20,6 +20,16 @@ var rightCharactersDir = 'Right Characters';
 
 var errors = [];
 
+
+function validatePSD(){
+
+    try{
+        
+    } catch(e){
+        throw new Error('validatePSD error: ' + e);
+    }
+}
+
 //Debug mode flag
 //Turn this on to spam alert messages to see where execution is at
 var DEBUG = false;
