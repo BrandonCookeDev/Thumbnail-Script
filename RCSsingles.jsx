@@ -153,7 +153,7 @@ function setupFileSystem(tournament){
 
 function saveJPG(tournament, round, player1, player2){
 
-    var filename = null;
+    var fileName = null;
     try{
         var docPath = app.activeDocument.path.fullName;
 
@@ -167,7 +167,7 @@ function saveJPG(tournament, round, player1, player2){
         name1= p1TagLayer;
         name2 = p2TagLayer;
     } catch(e){
-        throw new Error('saveJPG error: ' + e + '. \nInputs[' + tournament + ', ' + round + ', ' + player1 + ', ' + player2 + '] \nAttempted path: ' + filename);
+        throw new Error('saveJPG error: ' + e + '. \nInputs[' + tournament + ', ' + round + ', ' + player1 + ', ' + player2 + '] \nAttempted path: ' + fileName);
     }
 }
 

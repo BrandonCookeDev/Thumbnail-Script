@@ -19,21 +19,27 @@ var p2TagLayer = "Smashtag2";
 var p3TagLayer = "Smashtag3";
 var p4TagLayer = "Smashtag4";
 
-var textDir             = 'Logos and Text';
-var leftCharactersDir   = 'Characters Left';
-var rightCharactersDir  = 'Characters Right';
-var leftCharactersP2Dir = 'Characters Left P2';
-var rightCharactersP2Dir  = 'Characters Right P2';
+var textDir               = 'Logos and Text';
+var leftCharactersP1Dir   = 'Characters Left P1';
+var leftCharactersP2Dir   = 'Characters Left P2';
+var rightCharactersP3Dir  = 'Characters Right P3';
+var rightCharactersP4Dir  = 'Characters Right P4';
 
 var errors = [];
+
+var DEBUG = false;
+function debug(s){
+    if(DEBUG == true)
+        alert(s)
+}
 
 function validatePSD(){
     try{
         //Validate all required layer sets exist
         try{
-            doc.layerSets.getByName(leftCharactersDir)
+            doc.layerSets.getByName(leftCharactersP1Dir)
         } catch(e){
-            throw new Error('Missing layer set: ' + leftCharactersDir);
+            throw new Error('Missing layer set: ' + leftCharactersP1Dir);
         }
 
         try{
@@ -43,15 +49,15 @@ function validatePSD(){
         }
     
         try{
-            doc.layerSets.getByName(rightCharactersDir)
+            doc.layerSets.getByName(rightCharactersP3Dir)
         } catch(e){
-            throw new Error('Missing layer set: ' + rightCharactersDir);
+            throw new Error('Missing layer set: ' + rightCharactersP3Dir);
         }
 
         try{
-            doc.layerSets.getByName(rightCharactersP2Dir);
+            doc.layerSets.getByName(rightCharactersP4Dir);
         } catch(e){
-            throw new Error('Missing layer set: ' + rightCharactersP2Dir);
+            throw new Error('Missing layer set: ' + rightCharactersP4Dir);
         }
 
         try{
@@ -60,10 +66,10 @@ function validatePSD(){
             throw new Error('Missing layer set: ' + textDir);
         }
         
-        var rightCharLayerSet = doc.layerSets.getByName(rightCharactersDir);
-        var leftCharLayerSet = doc.layerSets.getByName(leftCharactersDir);
-        var right2CharLayerSet = doc.layerSets.getByName(rightCharactersP2Dir);
-        var left2CharLayerSet = doc.layerSets.getByName(leftCharactersP2Dir)
+        var rightCharLayerSet = doc.layerSets.getByName(leftCharactersP1Dir);
+        var leftCharLayerSet = doc.layerSets.getByName(leftCharactersP2Dir);
+        var right2CharLayerSet = doc.layerSets.getByName(rightCharactersP3Dir);
+        var left2CharLayerSet = doc.layerSets.getByName(rightCharactersP4Dir)
         var textLayerSet = doc.layerSets.getByName(textDir);
 
         //Validate all required text layers exist
@@ -163,98 +169,152 @@ function validatePSD(){
     }       
 }
 
-function savePNG(tournament, round, player1, player2, player3, player4){
-    var jpgOptions = new JPEGSaveOptions();
+function trim (str) {  
+    return str.replace(/^\s+/,'').replace(/\s+$/,'');  
+}  
+function setupFileSystem(tournament){
+    try{
+        //Create dir for the tournament's thumbnails if not exists
+        var doc = app.activeDocument;
+        var docPath = app.activeDocument.path.fullName;
+        var docName = doc.name;
 
-    var fileName = tournament + 'Doubles-' + round + '-' + player1 + player2 + "-" + player3 + player4 + ".jpg";
-    var path = File(fileName);
+        alert('Doc path: ' + docPath + '.... \nCreating folder: ' + docPath + '/' + tournament + '-doubles');
+        var dir = Folder(docPath + '/' + tournament + '-doubles');
+        if(!dir.exists) {
+            dir.create();
+            alert('Created directory: ' + docPath + '/' + tournament + '-doubles')
+        }
+        else 
+            alert('Directory exists! ' + docPath + '/' + tournament + '-doubles');
 
-    doc.saveAs(path, jpgOptions, true, Extension.LOWERCASE);
-    name1 = p1TagLayer;
-    name2 = p2TagLayer;
-    name3 = p3TagLayer;
-    name4 = p4TagLayer;
+        return;
+    } catch(e){
+        throw new Error('setupFileSystem error: ' + e)
+    }
+}
+
+function saveJPG(tournament, round, player1, player2, player3, player4){
+    var fileName;
+    try{
+        var docPath = app.activeDocument.path.fullName;
+
+        fileName = docPath + '/' + tournament + '-doubles/' + tournament + ' -' + round + '-' + player1 + "_" + player2 + "-" + player3 + "_" + player4 + ".jpg";
+        debug('Saving image: ' + fileName)
+
+        var path = File(fileName);
+        var jpgOptions = new JPEGSaveOptions();
+        doc.saveAs(path, jpgOptions, true, Extension.LOWERCASE);
+
+        name1= p1TagLayer;
+        name2 = p2TagLayer;
+        name3 = p3TagLayer;
+        name4 = p4TagLayer;
+    } catch(e){
+        throw new Error('saveJPG error: ' + e + '. \nInputs[' + tournament + ', ' + round + ', ' + player1 + ', ' + player2 + '] \nAttempted path: ' + fileName);
+    }
 }
 
 function switchChar1(char1, color1){
-    //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(leftCharactersDir);
-    var layerSetRef = charFolder.layerSets.getByName(char1);
-    group = layerSetRef.layers;
-    for(var i = 0; i < group.length; i++)
-    {
-        if(group[i].name == color1)
+    try{
+        //if(layer.kind != LayerKind.TEXT)layer.visible = false;
+        var charFolder = doc.layerSets.getByName(leftCharactersP1Dir);
+        var layerSetRef = charFolder.layerSets.getByName(char1);
+        group = layerSetRef.layers;
+        for(var i = 0; i < group.length; i++)
         {
-            doc.activeLayer = group[i];
-            charlay1 = doc.activeLayer;
-            charlay1.visible = true;
+            if(group[i].name == color1)
+            {
+                doc.activeLayer = group[i];
+                charlay1 = doc.activeLayer;
+                charlay1.visible = true;
+            }
         }
+    } catch(e){
+        throw new Error('switchChar1 error: ' + e);
     }
 }
 
 function switchChar2(char2, color2){
-    //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(leftCharactersP2Dir);
-    var layerSetRef = charFolder.layerSets.getByName(char2);
-    group = layerSetRef.layers;
-    for(var i = 0; i < group.length; i++)
-    {
-        if(group[i].name == color2)
+    try{
+        //if(layer.kind != LayerKind.TEXT)layer.visible = false;
+        var charFolder = doc.layerSets.getByName(leftCharactersP2Dir);
+        var layerSetRef = charFolder.layerSets.getByName(char2);
+        group = layerSetRef.layers;
+        for(var i = 0; i < group.length; i++)
         {
-            doc.activeLayer = group[i];
-            charlay2 = doc.activeLayer;
-            charlay2.visible = true;
+            if(group[i].name == color2)
+            {
+                doc.activeLayer = group[i];
+                charlay2 = doc.activeLayer;
+                charlay2.visible = true;
+            }
         }
+    } catch(e){
+        throw new Error('switchChar2 error: ' + e);
     }
 }
 
 function switchChar3(char3, color3){
-    //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(rightCharactersDir);
-    var layerSetRef = charFolder.layerSets.getByName(char3);
-    group = layerSetRef.layers;
-    for(var i = 0; i < group.length; i++)
-    {
-        if(group[i].name == color3)
+    try{
+        //if(layer.kind != LayerKind.TEXT)layer.visible = false;
+        var charFolder = doc.layerSets.getByName(rightCharactersP3Dir);
+        var layerSetRef = charFolder.layerSets.getByName(char3);
+        group = layerSetRef.layers;
+        for(var i = 0; i < group.length; i++)
         {
-            doc.activeLayer = group[i];
-            charlay3 = doc.activeLayer;
-            charlay3.visible = true;
+            if(group[i].name == color3)
+            {
+                doc.activeLayer = group[i];
+                charlay3 = doc.activeLayer;
+                charlay3.visible = true;
+            }
         }
+    } catch(e){
+        throw new Error('switchChar3 error: ' + e);
     }
 }
 
 function switchChar4(char4, color4){
-    //if(layer.kind != LayerKind.TEXT)layer.visible = false;
-    var charFolder = doc.layerSets.getByName(rightCharactersP2Dir);
-    var layerSetRef = charFolder.layerSets.getByName(char4);
-    group = layerSetRef.layers;
-    for(var i = 0; i < group.length; i++)
-    {
-        if(group[i].name == color4)
+    try{
+        //if(layer.kind != LayerKind.TEXT)layer.visible = false;
+        var charFolder = doc.layerSets.getByName(rightCharactersP4Dir);
+        var layerSetRef = charFolder.layerSets.getByName(char4);
+        group = layerSetRef.layers;
+        for(var i = 0; i < group.length; i++)
         {
-            doc.activeLayer = group[i];
-            charlay4 = doc.activeLayer;
-            charlay4.visible = true;
+            if(group[i].name == color4)
+            {
+                doc.activeLayer = group[i];
+                charlay4 = doc.activeLayer;
+                charlay4.visible = true;
+            }
         }
+    } catch(e){
+        throw new Error('switchChar2 error: ' + e);
     }
 }
 
 function changeText(layerName, newText){
-    var layerSetRef = doc.layerSets.getByName(textDir);
-    var text = layerSetRef.layers.getByName(layerName);
-    if(text.kind == LayerKind.TEXT) text.textItem.contents = newText;
-    text.visible = true;
-    if(layerName == p1TagLayer)
-        name1 = text;
-    else if(layerName == p2TagLayer)
-        name2 = text;
-    else if(layerName == p3TagLayer)
-        name3 = text;
-    else
-        name4 = text;
+    try{
+        var layerSetRef = doc.layerSets.getByName(textDir);
+        var text = layerSetRef.layers.getByName(layerName);
+        if(text.kind == LayerKind.TEXT) text.textItem.contents = newText;
+        text.visible = true;
+        if(layerName == p1TagLayer)
+            name1 = text;
+        else if(layerName == p2TagLayer)
+            name2 = text;
+        else if(layerName == p3TagLayer)
+            name3 = text;
+        else
+            name4 = text;
+    } catch(e){
+        throw new Error('changeText error: ' + e);
+    }
 }
 
+alert("press ok to validate PSD");
 /******** MAIN ***********/
 var isValid = validatePSD();
 if(isValid){
@@ -309,17 +369,17 @@ if(isValid){
         for(var s = 1; s<csvString.length; s++){
             var lineData = csvString[s].split(",");
 
-            var char1 = lineData[3];
-            var color1 = lineData[4];
+            var char1 = trim(lineData[3]);
+            var color1 = trim(lineData[4]);
 
-            var char2 = lineData[6];
-            var color2 = lineData[7];
+            var char2 = trim(lineData[6]);
+            var color2 = trim(lineData[7]);
             
-            var char3 = lineData[9];
-            var color3 = lineData[10];
+            var char3 = trim(lineData[9]);
+            var color3 = trim(lineData[10]);
 
-            var char4 = lineData[12];
-            var color4 = lineData[13];
+            var char4 = trim(lineData[12]);
+            var color4 = trim(lineData[13]);
 
             //VALIDATE COLORS AND FAIL IF INCORRECT
             validate(char1, color1);
@@ -328,30 +388,33 @@ if(isValid){
             validate(char4, color4);
         }
 
+        //Setup file system
+        setupFileSystem(csvString[1].split(",")[0]);
+
         //Parses entire CSV
         for(var s = 1; s<csvString.length; s++){
             try {
                 var lineData = csvString[s].split(",");
 
                 //Process each line of data.
-                var tournament = lineData[0];
-                var round = lineData[1];
+                var tournament = trim(lineData[0]);
+                var round = trim(lineData[1]);
 
-                var player1 = lineData[2];
-                var char1 = lineData[3];
-                var color1 = lineData[4];
+                var player1 = trim(lineData[2]);
+                var char1 = trim(lineData[3]);
+                var color1 = trim(lineData[4]);
 
-                var player2 = lineData[5];
-                var char2 = lineData[6];
-                var color2 = lineData[7];
+                var player2 = trim(lineData[5]);
+                var char2 = trim(lineData[6]);
+                var color2 = trim(lineData[7]);
 
-                var player3 = lineData[8];
-                var char3 = lineData[9];
-                var color3 = lineData[10];
+                var player3 = trim(lineData[8]);
+                var char3 = trim(lineData[9]);
+                var color3 = trim(lineData[10]);
 
-                var player4 = lineData[11];
-                var char4 = lineData[12];
-                var color4 = lineData[13];
+                var player4 = trim(lineData[11]);
+                var char4 = trim(lineData[12]);
+                var color4 = trim(lineData[13]);
 
                 //Switch Characters
                 switchChar1(char1, color1);
@@ -367,7 +430,7 @@ if(isValid){
                 changeText(roundLayer, round);
 
                 //Save photo
-                savePNG(tournament, round, player1, player2, player3, player4);
+                saveJPG(tournament, round, player1, player2, player3, player4);
 
                 //Reset the layers
                 charlay1.visible = false;
@@ -376,7 +439,8 @@ if(isValid){
                 charlay4.visible = false;
             }
             catch(err){
-                errors.push(err);
+                throw err;
+                //errors.push(err);
             }
         }
 

@@ -6,7 +6,10 @@
             "Black",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+
+        }
     },
     {
         "Name": "Donkey Kong",
@@ -16,7 +19,10 @@
             "Blue",
             "Green",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Dr. Mario",
@@ -26,7 +32,10 @@
             "Green",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Falco",
@@ -35,7 +44,10 @@
             "Red",
             "Green",
             "Blue"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Captain Falcon",
@@ -46,7 +58,10 @@
             "Green",
             "Pink",
             "Black"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Fox",
@@ -55,7 +70,10 @@
             "Green",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Mr. Game and Watch",
@@ -64,7 +82,10 @@
             "Blue",
             "Green",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Ganondorf",
@@ -75,7 +96,10 @@
             "Green",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Ice Climbers",
@@ -84,7 +108,10 @@
             "Orange",
             "Red",
             "Green"
-        ]
+        ],
+        "AliasColors":{
+            "Blue": "Neutral"
+        }
     },
     {
         "Name": "Kirby",
@@ -95,7 +122,10 @@
             "Green",
             "Red",
             "Yellow"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Link",
@@ -105,7 +135,10 @@
             "Black",
             "Red",
             "Blue"
-        ]
+        ],
+        "AliasColors":{
+            "Green": "Neutral"
+        }
     },
     {
         "Name": "Luigi",
@@ -114,7 +147,10 @@
             "Blue",
             "White",
             "Pink"
-        ]
+        ],
+        "AliasColors":{
+            "Green": "Neutral"
+        }
     },
     {
         "Name": "Mario",
@@ -124,7 +160,10 @@
             "Black",
             "Green",
             "Blue"
-        ]
+        ],
+        "AliasColors":{
+            "Red": "Neutral"
+        }
     },
     {
         "Name": "Marth",
@@ -134,7 +173,10 @@
             "Black",
             "Green",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            "Blue": "Neutral"
+        }
     },
     {
         "Name": "MewTwo",
@@ -143,7 +185,10 @@
             "Green",
             "Blue",
             "Yellow"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Ness",
@@ -152,7 +197,10 @@
             "Green",
             "Blue",
             "Yellow"
-        ]
+        ],
+        "AliasColors":{
+            "Red": "Neutral"
+        }
     },
     {
         "Name": "Peach",
@@ -162,7 +210,10 @@
             "White",
             "Green",
             "Blue"
-        ]
+        ],
+        "AliasColors":{
+            "Red": "Neutral"
+        }
     },
     {
         "Name": "Pichu",
@@ -171,7 +222,10 @@
             "Blue",
             "Red",
             "Green"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Pikachu",
@@ -180,7 +234,10 @@
             "Green",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Jigglypuff",
@@ -190,7 +247,10 @@
             "Yellow",
             "Green",
             "Blue"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Roy",
@@ -200,7 +260,10 @@
             "Red",
             "Green",
             "Blue"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Samus",
@@ -210,7 +273,11 @@
             "Purple",
             "Black",
             "Pink"
-        ]
+        ],
+        "AliasColors":{
+            "Blue": "Purple",
+            "Red": "Neutral"
+        }
     },
     {
         "Name": "Sheik",
@@ -220,7 +287,10 @@
             "Red",
             "Green",
             "White"
-        ]
+        ],
+        "AliasColors":{
+            
+        }
     },
     {
         "Name": "Yoshi",
@@ -231,7 +301,10 @@
             "LightBlue",
             "Yellow",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            "Green": "Neutral"
+        }
     },
     {
         "Name": "Young Link",
@@ -241,7 +314,10 @@
             "White",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            "Green": "Neutral"
+        }
     },
     {
         "Name": "Zelda",
