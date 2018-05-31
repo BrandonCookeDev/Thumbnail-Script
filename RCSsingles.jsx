@@ -22,12 +22,90 @@ var errors = [];
 
 
 function validatePSD(){
-
     try{
+        //Validate all required layer sets exist
+        try{
+            doc.layerSets.getByName(leftCharactersDir)
+        } catch(e){
+            throw new Error('Missing layer set: ' + leftCharactersDir);
+        }
+    
+        try{
+            doc.layerSets.getByName(rightCharactersDir)
+        } catch(e){
+            throw new Error('Missing layer set: ' + rightCharactersDir);
+        }
+
+        try{
+            doc.layerSets.getByName(textDir)
+        } catch(e){
+            throw new Error('Missing layer set: ' + textDir);
+        }
         
+        var rightCharLayerSet = doc.layerSets.getByName(rightCharactersDir);
+        var leftCharLayerSet = doc.layerSets.getByName(leftCharactersDir);
+        var textLayerSet = doc.layerSets.getByName(textDir);
+
+        //Validate all required text layers exist
+        try{
+            textLayerSet.layers.getByName(p1TagLayer)
+        } catch(e){
+            throw new Error('Missing layer: ' + p1TagLayer);
+        }
+        try{
+            textLayerSet.layers.getByName(p2TagLayer)
+        } catch(e){
+            throw new Error('Missing layer: ' + p2TagLayer);
+        }
+        try{
+            textLayerSet.layers.getByName(roundLayer)
+        } catch(e){
+            throw new Error('Missing layer: ' + roundLayer);
+        }
+
+        var meleeCharacters = importCharacterData();
+
+        //Validate melee characters all have layer sets
+        for(var i in meleeCharacters){
+            var character = meleeCharacters[i];
+
+            try{
+                rightCharLayerSet.layerSets.getByName(character.Name)
+            } catch(e){
+                throw new Error('No layer set for character ' + character.Name + ' on the right side')
+            }
+
+            try{
+                leftCharLayerSet.layerSets.getByName(character.Name)
+            } catch(e){
+                throw new Error('No layer set for character ' + character.Name + ' on the left side');
+            }
+
+            var characterLayerSetLeft = leftCharLayerSet.layerSets.getByName(character.Name);
+            var characterLayerSetRight = rightCharLayerSet.layerSets.getByName(character.Name);
+
+            //Validate melee characters all have correct color layers
+            for(var i in character.Colors){
+                var color = character.Colors[i];
+
+                try{
+                    characterLayerSetLeft.layers.getByName(color)
+                } catch(e){
+                    throw new Error('No color layer ' + color + ' for character ' + character.Name + ' on the left side');
+                }
+                try{
+                    characterLayerSetRight.layers.getByName(color)
+                } catch(e){
+                    throw new Error('No color layer ' + color + ' for character ' + character.Name + ' on the right side');
+                }
+            }
+        }
+
+        return true;
     } catch(e){
-        throw new Error('validatePSD error: ' + e);
-    }
+        alert(e);
+        return false;
+    }       
 }
 
 //Debug mode flag
@@ -205,100 +283,105 @@ function validate(characterName, color){
     }
 }
 
-try{
-    //CSV
-    var csvFile = File.openDialog("Open Comma-delimited File","comma-delimited(*.csv):*.csv;");
-    
-    debug('opening CSV...');
-    csvFile.open('r') ;
 
-    debug('reading CSV...');
-    var csvString = csvFile.read();
-
-    debug('closing CSV...');
-    csvFile.close();
-
-    csvString = csvString.split('\n');
-    debug('content: ' + csvString);
-
-    debug('creating output directory')
-    setupFileSystem(csvString[1].split(",")[0]);
-
-    debug('validating colors and characters...');
-
-    alert('generating images.....');
-    //VALIDATE COLORS FOR CHARACTERS
-    for(var s = 1; s<csvString.length; s++){
-        var lineData = csvString[s].split(",");
-
-        var char1 = lineData[3];
-        var color1 = lineData[4];
-
-        var char2 = lineData[6];
-        var color2 = lineData[7];
-
-        debug('line: ' + char1 + ', ' + color1 + ', ' + char2 + ', ' + color2);
-
-        //VALIDATE COLORS AND FAIL IF INCORRECT
-        validate(char1, color1);
-        validate(char2, color2);
-    }
-
-    
+//First of all, valdate the document
+var isValid = validatePSD();
+if(isValid){
+    try{
+        //CSV
+        var csvFile = File.openDialog("Open Comma-delimited File","comma-delimited(*.csv):*.csv;");
         
-    debug('parsing CSV')
-    //Parses entire CSV
-    for(var s = 1; s<csvString.length; s++){
-        try{
+        debug('opening CSV...');
+        csvFile.open('r') ;
+
+        debug('reading CSV...');
+        var csvString = csvFile.read();
+
+        debug('closing CSV...');
+        csvFile.close();
+
+        csvString = csvString.split('\n');
+        debug('content: ' + csvString);
+
+        debug('creating output directory')
+        setupFileSystem(csvString[1].split(",")[0]);
+
+        debug('validating colors and characters...');
+
+        alert('generating images.....');
+        //VALIDATE COLORS FOR CHARACTERS
+        for(var s = 1; s<csvString.length; s++){
             var lineData = csvString[s].split(",");
-            debug('parsed line: ' + lineData);
 
-            //Process each line of data.
-            var tournament = lineData[0];
-            var round = lineData[1];
-
-            var player1 = lineData[2];
             var char1 = lineData[3];
             var color1 = lineData[4];
 
-            var player2 = lineData[5];
             var char2 = lineData[6];
             var color2 = lineData[7];
 
-            debug('switching characters');
-            //Switch Characters
-            switchChar1(char1, color1);
-            switchChar2(char2, color2);
+            debug('line: ' + char1 + ', ' + color1 + ', ' + char2 + ', ' + color2);
 
-            debug('changing text');
-            //Change player names
-            changeText(p1TagLayer, player1);
-            changeText(p2TagLayer, player2);
-            changeText(roundLayer, round);
-
-            debug('saving photo');
-            //Save photo
-            saveJPG(tournament, round, player1, player2);
-
-            debug('resetting layers');
-            //Reset the layers
-            charlay1.visible = false;
-            charlay2.visible = false;
+            //VALIDATE COLORS AND FAIL IF INCORRECT
+            validate(char1, color1);
+            validate(char2, color2);
         }
-        catch(err){
-            alert(err);
-            //errors.push(err);
+
+        
+            
+        debug('parsing CSV')
+        //Parses entire CSV
+        for(var s = 1; s<csvString.length; s++){
+            try{
+                var lineData = csvString[s].split(",");
+                debug('parsed line: ' + lineData);
+
+                //Process each line of data.
+                var tournament = lineData[0];
+                var round = lineData[1];
+
+                var player1 = lineData[2];
+                var char1 = lineData[3];
+                var color1 = lineData[4];
+
+                var player2 = lineData[5];
+                var char2 = lineData[6];
+                var color2 = lineData[7];
+
+                debug('switching characters');
+                //Switch Characters
+                switchChar1(char1, color1);
+                switchChar2(char2, color2);
+
+                debug('changing text');
+                //Change player names
+                changeText(p1TagLayer, player1);
+                changeText(p2TagLayer, player2);
+                changeText(roundLayer, round);
+
+                debug('saving photo');
+                //Save photo
+                saveJPG(tournament, round, player1, player2);
+
+                debug('resetting layers');
+                //Reset the layers
+                charlay1.visible = false;
+                charlay2.visible = false;
+            }
+            catch(err){
+                alert(err);
+                //errors.push(err);
+            }
         }
-    }
 
-    var ret = 'Completed \n';
-    for(var i=0; i < errors.length; i++){
-        errors += errors[i].message + ' \n';
-    }
+        var ret = 'Completed \n';
+        for(var i=0; i < errors.length; i++){
+            errors += errors[i].message + ' \n';
+        }
 
-    alert(ret);
-} catch(e){
-    alert("Error: " + e);
+        alert(ret);
+    } catch(e){
+        alert("Error: " + e);
+    }
 }
 
 function importCharacterData(){
