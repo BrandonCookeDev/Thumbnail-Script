@@ -255,136 +255,140 @@ function changeText(layerName, newText){
         name4 = text;
 }
 
-    //CSV
-    var csvFile = File.openDialog("Open Comma-delimited File","comma-delimited(*.csv):*.csv;");
-    csvFile.open('r') ;
-    var csvString = csvFile.read();
-    csvFile.close();
-    csvString = csvString.split('\n');
+/******** MAIN ***********/
+var isValid = validatePSD();
+if(isValid){
+    try{
+        //CSV
+        var csvFile = File.openDialog("Open Comma-delimited File","comma-delimited(*.csv):*.csv;");
+        csvFile.open('r') ;
+        var csvString = csvFile.read();
+        csvFile.close();
+        csvString = csvString.split('\n');
 
-    function validate(characterName, color){
-        
-        var names = [];
-        for(var i = 0; i<characterData.length; i++){
-            var curCharacter = characterData[i];
+        function validate(characterName, color){
             
-            names.push(curCharacter.Name);
-            
-            if(characterName == curCharacter.Name){
-                var flag = false;
-                for(var c = 0; c < curCharacter.Colors.length; c++){
-                    var curColor = curCharacter.Colors[c];
-                    if(color == curColor)
-                        flag = true;
+            var names = [];
+            for(var i = 0; i<characterData.length; i++){
+                var curCharacter = characterData[i];
+                
+                names.push(curCharacter.Name);
+                
+                if(characterName == curCharacter.Name){
+                    var flag = false;
+                    for(var c = 0; c < curCharacter.Colors.length; c++){
+                        var curColor = curCharacter.Colors[c];
+                        if(color == curColor)
+                            flag = true;
+                    }
+                    if(!flag) throw new Error("\n"+color+" is not a valid color for "+characterName+".\nValid Colors are: \n"+curCharacter.Colors+"\n");
                 }
-                if(!flag) throw new Error("\n"+color+" is not a valid color for "+characterName+".\nValid Colors are: \n"+curCharacter.Colors+"\n");
             }
-        }
-        
-        var nameFlag = false;
-        for(var n = 0; n < names.length; n++){
-            var curName = names[n];
             
-            if(curName == characterName)
-                nameFlag = true;
+            var nameFlag = false;
+            for(var n = 0; n < names.length; n++){
+                var curName = names[n];
+                
+                if(curName == characterName)
+                    nameFlag = true;
+            }
+            if(!nameFlag) throw new Error(characterName + ' is not a valid character. \nValid characters are: \n'+names+"\n");
+            
+            /*
+            var filtered;
+            filtered = _.findWhere(characterData, {"Name": character});
+            if(filtered.Colors.indexOf(color) < 0) {
+                var msg = color + ' is not a color for ' + character;
+                alert(msg);
+                throw new Error(msg);
+            }
+            */
         }
-        if(!nameFlag) throw new Error(characterName + ' is not a valid character. \nValid characters are: \n'+names+"\n");
-        
-        /*
-        var filtered;
-        filtered = _.findWhere(characterData, {"Name": character});
-        if(filtered.Colors.indexOf(color) < 0) {
-            var msg = color + ' is not a color for ' + character;
-            alert(msg);
-            throw new Error(msg);
-        }
-        */
-    }
 
-try{
-    //VALIDATE COLORS FOR CHARACTERS
-    for(var s = 1; s<csvString.length; s++){
-        var lineData = csvString[s].split(",");
-
-        var char1 = lineData[3];
-        var color1 = lineData[4];
-
-        var char2 = lineData[6];
-        var color2 = lineData[7];
-        
-        var char3 = lineData[9];
-        var color3 = lineData[10];
-
-        var char4 = lineData[12];
-        var color4 = lineData[13];
-
-        //VALIDATE COLORS AND FAIL IF INCORRECT
-        validate(char1, color1);
-        validate(char2, color2);
-        validate(char3, color3);
-        validate(char4, color4);
-    }
-
-    //Parses entire CSV
-    for(var s = 1; s<csvString.length; s++){
-        try {
+        //VALIDATE COLORS FOR CHARACTERS
+        for(var s = 1; s<csvString.length; s++){
             var lineData = csvString[s].split(",");
 
-            //Process each line of data.
-            var tournament = lineData[0];
-            var round = lineData[1];
-
-            var player1 = lineData[2];
             var char1 = lineData[3];
             var color1 = lineData[4];
 
-            var player2 = lineData[5];
             var char2 = lineData[6];
             var color2 = lineData[7];
-
-            var player3 = lineData[8];
+            
             var char3 = lineData[9];
             var color3 = lineData[10];
 
-            var player4 = lineData[11];
             var char4 = lineData[12];
             var color4 = lineData[13];
 
-            //Switch Characters
-            switchChar1(char1, color1);
-            switchChar2(char2, color2);
-            switchChar3(char3, color3);
-            switchChar4(char4, color4);
-
-            //Change player names
-            changeText(p1TagLayer, player1);
-            changeText(p2TagLayer, player2);
-            changeText(p3TagLayer, player3);
-            changeText(p4TagLayer, player4);
-            changeText(roundLayer, round);
-
-            //Save photo
-            savePNG(tournament, round, player1, player2, player3, player4);
-
-            //Reset the layers
-            charlay1.visible = false;
-            charlay2.visible = false;
-            charlay3.visible = false;
-            charlay4.visible = false;
+            //VALIDATE COLORS AND FAIL IF INCORRECT
+            validate(char1, color1);
+            validate(char2, color2);
+            validate(char3, color3);
+            validate(char4, color4);
         }
-        catch(err){
-            errors.push(err);
+
+        //Parses entire CSV
+        for(var s = 1; s<csvString.length; s++){
+            try {
+                var lineData = csvString[s].split(",");
+
+                //Process each line of data.
+                var tournament = lineData[0];
+                var round = lineData[1];
+
+                var player1 = lineData[2];
+                var char1 = lineData[3];
+                var color1 = lineData[4];
+
+                var player2 = lineData[5];
+                var char2 = lineData[6];
+                var color2 = lineData[7];
+
+                var player3 = lineData[8];
+                var char3 = lineData[9];
+                var color3 = lineData[10];
+
+                var player4 = lineData[11];
+                var char4 = lineData[12];
+                var color4 = lineData[13];
+
+                //Switch Characters
+                switchChar1(char1, color1);
+                switchChar2(char2, color2);
+                switchChar3(char3, color3);
+                switchChar4(char4, color4);
+
+                //Change player names
+                changeText(p1TagLayer, player1);
+                changeText(p2TagLayer, player2);
+                changeText(p3TagLayer, player3);
+                changeText(p4TagLayer, player4);
+                changeText(roundLayer, round);
+
+                //Save photo
+                savePNG(tournament, round, player1, player2, player3, player4);
+
+                //Reset the layers
+                charlay1.visible = false;
+                charlay2.visible = false;
+                charlay3.visible = false;
+                charlay4.visible = false;
+            }
+            catch(err){
+                errors.push(err);
+            }
         }
-    }
 
-    var ret = 'Completed \n';
-    for(var i=0; i < errors.length; i++){
-        errors += errors[i].message + ' \n';
-    }
+        var ret = 'Completed \n';
+        for(var i=0; i < errors.length; i++){
+            errors += errors[i].message + ' \n';
+        }
 
-    alert(ret);
-} catch(e){
-    alert(e);
+        alert(ret);
+    } catch(e){
+        alert(e);
+    }
 }
 
 function importCharacterData(){
