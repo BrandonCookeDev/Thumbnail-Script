@@ -14,7 +14,7 @@ var p1TagLayer = "Smashtag1";
 var p2TagLayer = "Smashtag2";
 var roundLayer = "Round";
 
-var textDir = 'Logos and Text';
+var textDir = 'Text';
 var leftCharactersDir = 'Left Characters';
 var rightCharactersDir = 'Right Characters';
 
@@ -284,6 +284,7 @@ function validate(characterName, color){
 }
 
 
+alert('press ok to validate PSD...')
 //First of all, valdate the document
 var isValid = validatePSD();
 if(isValid){

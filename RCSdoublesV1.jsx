@@ -21,8 +21,8 @@ var p4TagLayer = "Smashtag4";
 
 var textDir             = 'Logos and Text';
 var leftCharactersDir   = 'Characters Left';
-var leftCharactersP2Dir = 'Characters Left P2';
 var rightCharactersDir  = 'Characters Right';
+var leftCharactersP2Dir = 'Characters Left P2';
 var rightCharactersP2Dir  = 'Characters Right P2';
 
 var errors = [];
@@ -112,21 +112,21 @@ function validatePSD(){
             }
 
             try{
-                rightCharactersP2Dir.layerSets.getByName(character.Name)
+                right2CharLayerSet.layerSets.getByName(character.Name)
             } catch(e){
-                throw new Error('No layer set for character ' + character.Name + ' on the right side');
+                throw new Error('No layer set for character ' + character.Name + ' on the right side p2');
             }
 
             try{
-                leftCharactersP2Dir.layerSets.getByName(character.Name)
+                left2CharLayerSet.layerSets.getByName(character.Name)
             } catch(e){
-                throw new Error('No layer set for character ' + character.Name + ' on the left side');
+                throw new Error('No layer set for character ' + character.Name + ' on the left side p2');
             }
 
             var characterLayerSetLeft = leftCharLayerSet.layerSets.getByName(character.Name);
             var characterLayerSetRight = rightCharLayerSet.layerSets.getByName(character.Name);
-            var characterLayerSetLeft2 = leftCharactersP2Dir.layerSets.getByName(character.Name);
-            var characterLayerSetRight2 = rightCharactersP2Dir.layerSets.getByName(character.Name);
+            var characterLayerSetLeft2 = left2CharLayerSet.layerSets.getByName(character.Name);
+            var characterLayerSetRight2 = right2CharLayerSet.layerSets.getByName(character.Name);
 
             //Validate melee characters all have correct color layers
             for(var i in character.Colors){
@@ -146,12 +146,12 @@ function validatePSD(){
                 try{
                     characterLayerSetLeft2.layers.getByName(color)
                 } catch(e){
-                    throw new Error('No color layer ' + color + ' for character ' + character.Name + ' on the left side');
+                    throw new Error('No color layer ' + color + ' for character ' + character.Name + ' on the left side p2');
                 }
                 try{
                     characterLayerSetRight2.layers.getByName(color)
                 } catch(e){
-                    throw new Error('No color layer ' + color + ' for character ' + character.Name + ' on the right side');
+                    throw new Error('No color layer ' + color + ' for character ' + character.Name + ' on the right side p2');
                 }
             }
         }
