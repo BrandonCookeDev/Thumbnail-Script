@@ -129,6 +129,32 @@ function debug(s){
     */
 }
 
+function clearAllCharacters(){
+    try{
+        var meleeCharacters = importCharacterData();
+        var rightCharLayerSet = doc.layerSets.getByName(rightCharactersDir);
+        var leftCharLayerSet = doc.layerSets.getByName(leftCharactersDir);
+        var rightCharacters = rightCharLayerSet.layerSets;
+        var leftCharacters = leftCharLayerSet.layerSets;
+        //Validate melee characters all have layer sets
+        for(var i in meleeCharacters){
+            var character = meleeCharacters[i];
+            var characterLayerSetLeft = leftCharLayerSet.layerSets.getByName(character.Name);
+            var characterLayerSetRight = rightCharLayerSet.layerSets.getByName(character.Name);
+
+            //Validate melee characters all have correct color layers
+            for(var i in character.Colors){
+                var color = character.Colors[i];
+
+                characterLayerSetLeft.layers.getByName(color).visible = false;
+                characterLayerSetRight.layers.getByName(color).visible = false;
+            }
+        }
+    } catch(e){
+        throw new Error('clearAllCharacters error: ' + e);
+    }
+}
+
 function setupFileSystem(tournament){
     try{
         //Create dir for the tournament's thumbnails if not exists
@@ -289,6 +315,8 @@ alert('press ok to validate PSD...')
 var isValid = validatePSD();
 if(isValid){
     try{
+        clearAllCharacters();
+
         //CSV
         var csvFile = File.openDialog("Open Comma-delimited File","comma-delimited(*.csv):*.csv;");
         
@@ -387,4 +415,28 @@ if(isValid){
 
 function importCharacterData(){
 	return [{Name:"Bowser",Colors:["Neutral","Black","Blue","Red"]},{Name:"Donkey Kong",Colors:["Neutral","Black","Blue","Green","Red"]},{Name:"Dr. Mario",Colors:["Neutral","Black","Green","Blue","Red"]},{Name:"Falco",Colors:["Neutral","Red","Green","Blue"]},{Name:"Captain Falcon",Colors:["Neutral","Red","Blue","Green","Pink","Black"]},{Name:"Fox",Colors:["Neutral","Green","Blue","Red"]},{Name:"Mr. Game and Watch",Colors:["Neutral","Blue","Green","Red"]},{Name:"Ganondorf",Colors:["Neutral","Blue","Purple","Green","Blue","Red"]},{Name:"Ice Climbers",Colors:["Neutral","Orange","Red","Green"]},{Name:"Kirby",Colors:["Neutral","White","Blue","Green","Red","Yellow"]},{Name:"Link",Colors:["Neutral","White","Black","Red","Blue"]},{Name:"Luigi",Colors:["Neutral","Blue","White","Pink"]},{Name:"Mario",Colors:["Neutral","Yellow","Black","Green","Blue"]},{Name:"Marth",Colors:["Neutral","White","Black","Green","Red"]},{Name:"MewTwo",Colors:["Neutral","Green","Blue","Yellow"]},{Name:"Ness",Colors:["Neutral","Green","Blue","Yellow"]},{Name:"Peach",Colors:["Neutral","Yellow","White","Green","Blue"]},{Name:"Pichu",Colors:["Neutral","Blue","Red","Green"]},{Name:"Pikachu",Colors:["Neutral","Green","Blue","Red"]},{Name:"Jigglypuff",Colors:["Neutral","Red","Yellow","Green","Blue"]},{Name:"Roy",Colors:["Neutral","Yellow","Red","Green","Blue"]},{Name:"Samus",Colors:["Neutral","Green","Purple","Black","Pink"]},{Name:"Sheik",Colors:["Neutral","Blue","Red","Green","White"]},{Name:"Yoshi",Colors:["Neutral","Pink","Blue","LightBlue","Yellow","Red"]},{Name:"Young Link",Colors:["Neutral","Black","White","Blue","Red"]},{Name:"Zelda",Colors:["Neutral","White","Green","Blue","Red"]}];
+}
+
+function getCharacterByName(name){
+    try{
+        var data = importCharacterData();
+        for(var i in data){
+            var character = data[i];
+            if(character.Name == name)
+                return character;
+        }
+        return undefined;
+    } catch(e){
+        throw new Error('getCharacterByName error: ' + e);
+    }
+}
+
+function resolveAliasColor(character, color){
+
+    try{
+        var character = getCharacterByName(character);
+        return character.AliasColors.hasOwnProperty(color) ? character.AliasColors[color] : color;
+    }catch(e){
+        throw new Error('resolveAlternateColor error: ' + e);
+    }
 }

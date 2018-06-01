@@ -143,13 +143,14 @@
     {
         "Name": "Luigi",
         "Colors": [
-            "Neutra",
+            "Neutral",
             "Blue",
             "White",
             "Pink"
         ],
         "AliasColors":{
-            "Green": "Neutral"
+            "Green": "Neutral",
+            "Red": "Pink"
         }
     },
     {
@@ -327,6 +328,9 @@
             "Green",
             "Blue",
             "Red"
-        ]
+        ],
+        "AliasColors":{
+            "Green": "Neutral"
+        }
     }
 ]
