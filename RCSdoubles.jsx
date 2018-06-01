@@ -19,7 +19,7 @@ var p2TagLayer = "Smashtag2";
 var p3TagLayer = "Smashtag3";
 var p4TagLayer = "Smashtag4";
 
-var textDir               = 'Logos and Text';
+var textDir               = 'Text';
 var leftCharactersP1Dir   = 'Characters Left P1';
 var leftCharactersP2Dir   = 'Characters Left P2';
 var rightCharactersP3Dir  = 'Characters Right P3';

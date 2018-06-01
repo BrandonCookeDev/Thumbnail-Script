@@ -19,7 +19,7 @@ var p2TagLayer = "Smashtag2";
 var p3TagLayer = "Smashtag3";
 var p4TagLayer = "Smashtag4";
 
-var textDir               = 'Logos and Text';
+var textDir               = 'Text';
 var leftCharactersP1Dir   = 'Characters Left P1';
 var leftCharactersP2Dir   = 'Characters Left P2';
 var rightCharactersP3Dir  = 'Characters Right P3';
@@ -413,10 +413,10 @@ if(isValid){
             var color4 = trim(lineData[13]);
 
             //VALIDATE COLORS AND FAIL IF INCORRECT
-            validate(char1, color1);
-            validate(char2, color2);
-            validate(char3, color3);
-            validate(char4, color4);
+            validate(char1, resolveAliasColor(char1, color1));
+            validate(char2, resolveAliasColor(char2, color2));
+            validate(char3, resolveAliasColor(char3, color3));
+            validate(char4, resolveAliasColor(char4, color4));
         }
 
         //Setup file system
@@ -448,10 +448,10 @@ if(isValid){
                 var color4 = trim(lineData[13]);
 
                 //Switch Characters
-                switchChar1(char1, color1);
-                switchChar2(char2, color2);
-                switchChar3(char3, color3);
-                switchChar4(char4, color4);
+                switchChar1(char1, resolveAliasColor(char1, color1));
+                switchChar2(char2, resolveAliasColor(char2, color2));
+                switchChar3(char3, resolveAliasColor(char3, color3));
+                switchChar4(char4, resolveAliasColor(char4, color4));
 
                 //Change player names
                 changeText(p1TagLayer, player1);
@@ -488,4 +488,28 @@ if(isValid){
 
 function importCharacterData(){
     return [{"Name":"Bowser","Colors":["Neutral","Black","Blue","Red"],"AliasColors":{}},{"Name":"Donkey Kong","Colors":["Neutral","Black","Blue","Green","Red"],"AliasColors":{}},{"Name":"Dr. Mario","Colors":["Neutral","Black","Green","Blue","Red"],"AliasColors":{}},{"Name":"Falco","Colors":["Neutral","Red","Green","Blue"],"AliasColors":{}},{"Name":"Captain Falcon","Colors":["Neutral","Red","Blue","Green","Pink","Black"],"AliasColors":{}},{"Name":"Fox","Colors":["Neutral","Green","Blue","Red"],"AliasColors":{}},{"Name":"Mr. Game and Watch","Colors":["Neutral","Blue","Green","Red"],"AliasColors":{}},{"Name":"Ganondorf","Colors":["Neutral","Blue","Purple","Green","Blue","Red"],"AliasColors":{}},{"Name":"Ice Climbers","Colors":["Neutral","Orange","Red","Green"],"AliasColors":{"Blue":"Neutral"}},{"Name":"Kirby","Colors":["Neutral","White","Blue","Green","Red","Yellow"],"AliasColors":{}},{"Name":"Link","Colors":["Neutral","White","Black","Red","Blue"],"AliasColors":{"Green":"Neutral"}},{"Name":"Luigi","Colors":["Neutral","Blue","White","Pink"],"AliasColors":{"Green":"Neutral"}},{"Name":"Mario","Colors":["Neutral","Yellow","Black","Green","Blue"],"AliasColors":{"Red":"Neutral"}},{"Name":"Marth","Colors":["Neutral","White","Black","Green","Red"],"AliasColors":{"Blue":"Neutral"}},{"Name":"MewTwo","Colors":["Neutral","Green","Blue","Yellow"],"AliasColors":{}},{"Name":"Ness","Colors":["Neutral","Green","Blue","Yellow"],"AliasColors":{"Red":"Neutral"}},{"Name":"Peach","Colors":["Neutral","Yellow","White","Green","Blue"],"AliasColors":{"Red":"Neutral"}},{"Name":"Pichu","Colors":["Neutral","Blue","Red","Green"],"AliasColors":{}},{"Name":"Pikachu","Colors":["Neutral","Green","Blue","Red"],"AliasColors":{}},{"Name":"Jigglypuff","Colors":["Neutral","Red","Yellow","Green","Blue"],"AliasColors":{}},{"Name":"Roy","Colors":["Neutral","Yellow","Red","Green","Blue"],"AliasColors":{}},{"Name":"Samus","Colors":["Neutral","Green","Purple","Black","Pink"],"AliasColors":{"Blue":"Purple","Red":"Neutral"}},{"Name":"Sheik","Colors":["Neutral","Blue","Red","Green","White"],"AliasColors":{}},{"Name":"Yoshi","Colors":["Neutral","Pink","Blue","LightBlue","Yellow","Red"],"AliasColors":{"Green":"Neutral"}},{"Name":"Young Link","Colors":["Neutral","Black","White","Blue","Red"],"AliasColors":{"Green":"Neutral"}},{"Name":"Zelda","Colors":["Neutral","White","Green","Blue","Red"],"AliasColors":{"Green":"Neutral"}}];
+}
+
+function getCharacterByName(name){
+    try{
+        var data = importCharacterData();
+        for(var i in data){
+            var character = data[i];
+            if(character.Name == name)
+                return character;
+        }
+        return undefined;
+    } catch(e){
+        throw new Error('getCharacterByName error: ' + e);
+    }
+}
+
+function resolveAliasColor(character, color){
+
+    try{
+        var character = getCharacterByName(character);
+        return character.AliasColors.hasOwnProperty(color) ? character.AliasColors[color] : color;
+    }catch(e){
+        throw new Error('resolveAlternateColor error: ' + e);
+    }
 }
